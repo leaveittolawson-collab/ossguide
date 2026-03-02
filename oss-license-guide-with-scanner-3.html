@@ -1,0 +1,2471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Open Source License Guide — Interactive Comparison & Picker</title>
+<meta name="description" content="The most comprehensive interactive guide to open source licenses. Compare MIT, Apache, GPL, LGPL, AGPL, MPL and more. Find the right license in 60 seconds.">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a08;
+    --surface: #111110;
+    --border: #2a2a24;
+    --accent: #c8f03a;
+    --accent2: #f03a5a;
+    --text: #e8e4d8;
+    --muted: #6b6b5a;
+    --card: #161614;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Libre Baskerville', Georgia, serif;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: grid;
+    place-items: center;
+    position: relative;
+    padding: 4rem 2rem;
+    background:
+      radial-gradient(ellipse 80% 60% at 50% -10%, rgba(200,240,58,0.12) 0%, transparent 70%),
+      var(--bg);
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(var(--border) 1px, transparent 1px),
+      linear-gradient(90deg, var(--border) 1px, transparent 1px);
+    background-size: 60px 60px;
+    opacity: 0.35;
+    pointer-events: none;
+  }
+
+  .hero-inner {
+    max-width: 900px;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+  }
+
+  .badge {
+    display: inline-block;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    padding: 0.35em 1em;
+    margin-bottom: 2rem;
+  }
+
+  h1 {
+    font-size: clamp(2.8rem, 7vw, 6rem);
+    line-height: 1.05;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    margin-bottom: 1.5rem;
+  }
+
+  h1 em {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  .hero-sub {
+    font-size: 1.15rem;
+    color: var(--muted);
+    max-width: 560px;
+    margin: 0 auto 3rem;
+    font-style: italic;
+  }
+
+  .hero-cta-group {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.8rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0.9em 2.2em;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s;
+    text-decoration: none;
+    display: inline-block;
+  }
+
+  .btn-primary {
+    background: var(--accent);
+    color: #0a0a08;
+    font-weight: 700;
+  }
+  .btn-primary:hover { background: #d8ff3a; transform: translateY(-2px); }
+
+  .btn-outline {
+    background: transparent;
+    color: var(--text);
+    border: 1px solid var(--border);
+  }
+  .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* STATS BAR */
+  .stats-bar {
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    padding: 2rem;
+    display: flex;
+    justify-content: center;
+    gap: 4rem;
+    flex-wrap: wrap;
+  }
+
+  .stat {
+    text-align: center;
+  }
+
+  .stat-num {
+    font-family: 'Space Mono', monospace;
+    font-size: 2.2rem;
+    color: var(--accent);
+    display: block;
+    font-weight: 700;
+  }
+
+  .stat-label {
+    font-size: 0.78rem;
+    color: var(--muted);
+    font-style: italic;
+  }
+
+  /* SECTIONS */
+  section {
+    padding: 6rem 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .section-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 1rem;
+  }
+
+  h2 {
+    font-size: clamp(1.8rem, 4vw, 3rem);
+    letter-spacing: -0.02em;
+    margin-bottom: 1rem;
+    line-height: 1.15;
+  }
+
+  h2 em { font-style: italic; color: var(--accent); }
+
+  .section-intro {
+    color: var(--muted);
+    font-style: italic;
+    max-width: 560px;
+    margin-bottom: 3rem;
+  }
+
+  /* LICENSE PICKER TOOL */
+  .tool-wrapper {
+    background: var(--card);
+    border: 1px solid var(--border);
+    padding: 3rem;
+    position: relative;
+  }
+
+  .tool-wrapper::before {
+    content: '// INTERACTIVE TOOL';
+    position: absolute;
+    top: -1px;
+    right: 2rem;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    color: var(--accent);
+    background: var(--accent);
+    color: #0a0a08;
+    padding: 0.2em 0.7em;
+    letter-spacing: 0.1em;
+  }
+
+  .quiz-step { display: none; }
+  .quiz-step.active { display: block; }
+
+  .quiz-q {
+    font-size: 1.35rem;
+    margin-bottom: 2rem;
+    font-style: italic;
+  }
+
+  .quiz-options {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .quiz-opt {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 1.2rem 1.5rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.78rem;
+    text-align: left;
+    color: var(--text);
+  }
+
+  .quiz-opt:hover, .quiz-opt.selected {
+    border-color: var(--accent);
+    background: rgba(200,240,58,0.07);
+    color: var(--accent);
+  }
+
+  .quiz-opt .opt-icon {
+    font-size: 1.5rem;
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+
+  .quiz-progress {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--muted);
+    margin-bottom: 2rem;
+    letter-spacing: 0.1em;
+  }
+
+  .progress-bar {
+    height: 2px;
+    background: var(--border);
+    margin-top: 0.5rem;
+    position: relative;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: var(--accent);
+    transition: width 0.4s ease;
+  }
+
+  /* RESULT */
+  .result-card {
+    display: none;
+    background: var(--surface);
+    border: 1px solid var(--accent);
+    padding: 2.5rem;
+  }
+
+  .result-card.show { display: block; }
+
+  .result-license-name {
+    font-family: 'Space Mono', monospace;
+    font-size: 2rem;
+    color: var(--accent);
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+  }
+
+  .result-tagline {
+    color: var(--muted);
+    font-style: italic;
+    margin-bottom: 1.5rem;
+  }
+
+  .result-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  @media (max-width: 600px) {
+    .result-grid { grid-template-columns: 1fr; }
+  }
+
+  .result-col h4 {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 0.75rem;
+  }
+
+  .result-col.can h4 { color: #3af08a; }
+  .result-col.must h4 { color: #f0c83a; }
+  .result-col.cannot h4 { color: var(--accent2); }
+
+  .result-col ul { list-style: none; }
+  .result-col li {
+    font-size: 0.85rem;
+    padding: 0.3em 0;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .result-col li::before {
+    content: '—';
+    font-family: 'Space Mono', monospace;
+  }
+
+  .reset-btn {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--muted);
+    background: none;
+    border: none;
+    cursor: pointer;
+    letter-spacing: 0.1em;
+    text-decoration: underline;
+    padding: 0;
+    margin-top: 1rem;
+  }
+
+  /* COMPARISON TABLE */
+  .compare-table-wrap {
+    overflow-x: auto;
+  }
+
+  .compare-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.82rem;
+  }
+
+  .compare-table th {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--border);
+    text-align: left;
+    white-space: nowrap;
+  }
+
+  .compare-table th:first-child { color: var(--text); }
+
+  .compare-table td {
+    padding: 0.85rem 1rem;
+    border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+  }
+
+  .compare-table tr:hover td { background: var(--surface); }
+
+  .compare-table .lic-name {
+    font-family: 'Space Mono', monospace;
+    color: var(--accent);
+    font-weight: 700;
+    font-size: 0.85rem;
+  }
+
+  .tag {
+    display: inline-block;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    padding: 0.2em 0.6em;
+    letter-spacing: 0.1em;
+    border-radius: 0;
+  }
+
+  .tag-yes { background: rgba(58,240,138,0.12); color: #3af08a; border: 1px solid rgba(58,240,138,0.3); }
+  .tag-no { background: rgba(240,58,90,0.12); color: var(--accent2); border: 1px solid rgba(240,58,90,0.3); }
+  .tag-partial { background: rgba(240,200,58,0.12); color: #f0c83a; border: 1px solid rgba(240,200,58,0.3); }
+  .tag-type { background: rgba(200,240,58,0.08); color: var(--accent); border: 1px solid rgba(200,240,58,0.2); }
+
+  /* TIMELINE */
+  .timeline {
+    position: relative;
+    padding-left: 2rem;
+  }
+
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: var(--border);
+  }
+
+  .tl-item {
+    position: relative;
+    margin-bottom: 2.5rem;
+    padding-left: 2rem;
+  }
+
+  .tl-item::before {
+    content: '';
+    position: absolute;
+    left: -2.5rem;
+    top: 0.6rem;
+    width: 8px;
+    height: 8px;
+    background: var(--accent);
+    transform: rotate(45deg);
+  }
+
+  .tl-year {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--accent);
+    letter-spacing: 0.15em;
+    margin-bottom: 0.3rem;
+  }
+
+  .tl-title {
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 0.3rem;
+  }
+
+  .tl-desc {
+    font-size: 0.85rem;
+    color: var(--muted);
+    font-style: italic;
+  }
+
+  /* EMAIL CAPTURE */
+  .email-section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    padding: 3rem;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 2rem;
+    align-items: center;
+  }
+
+  @media (max-width: 640px) {
+    .email-section { grid-template-columns: 1fr; }
+  }
+
+  .email-section h3 {
+    font-size: 1.4rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .email-section p {
+    color: var(--muted);
+    font-size: 0.9rem;
+    font-style: italic;
+  }
+
+  .email-form {
+    display: flex;
+    gap: 0;
+    min-width: 320px;
+  }
+
+  @media (max-width: 640px) {
+    .email-form { min-width: unset; flex-direction: column; gap: 0.5rem; }
+  }
+
+  .email-form input {
+    flex: 1;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-right: none;
+    padding: 0.85em 1.2em;
+    color: var(--text);
+    font-family: 'Space Mono', monospace;
+    font-size: 0.8rem;
+    outline: none;
+  }
+
+  .email-form input::placeholder { color: var(--muted); }
+  .email-form input:focus { border-color: var(--accent); }
+
+  .email-form button {
+    background: var(--accent);
+    color: #0a0a08;
+    border: none;
+    padding: 0.85em 1.5em;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.2s;
+  }
+
+  .email-form button:hover { background: #d8ff3a; }
+
+  @media (max-width: 640px) {
+    .email-form input { border-right: 1px solid var(--border); }
+  }
+
+  /* FAQ */
+  .faq-list { max-width: 720px; }
+
+  .faq-item {
+    border-bottom: 1px solid var(--border);
+  }
+
+  .faq-q {
+    width: 100%;
+    background: none;
+    border: none;
+    color: var(--text);
+    font-family: 'Libre Baskerville', serif;
+    font-size: 1rem;
+    text-align: left;
+    padding: 1.5rem 0;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .faq-q:hover { color: var(--accent); }
+
+  .faq-icon {
+    font-family: 'Space Mono', monospace;
+    font-size: 1.2rem;
+    color: var(--accent);
+    flex-shrink: 0;
+    transition: transform 0.3s;
+  }
+
+  .faq-item.open .faq-icon { transform: rotate(45deg); }
+
+  .faq-a {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease;
+    color: var(--muted);
+    font-style: italic;
+    font-size: 0.95rem;
+  }
+
+  .faq-item.open .faq-a { max-height: 300px; padding-bottom: 1.5rem; }
+
+  /* FOOTER */
+  footer {
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    padding: 3rem 2rem;
+    text-align: center;
+  }
+
+  .footer-logo {
+    font-family: 'Space Mono', monospace;
+    font-size: 1.2rem;
+    color: var(--accent);
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    margin-bottom: 1rem;
+  }
+
+  footer p {
+    font-size: 0.8rem;
+    color: var(--muted);
+    font-style: italic;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    background: rgba(10,10,8,0.9);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .nav-logo {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.9rem;
+    color: var(--accent);
+    font-weight: 700;
+    letter-spacing: 0.05em;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+  }
+
+  @media (max-width: 640px) { .nav-links { display: none; } }
+
+  .nav-links a {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--muted);
+    text-decoration: none;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--accent); }
+
+  /* FADE IN */
+  .fade-up {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+
+  .fade-up.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ===================== SCANNER STYLES ===================== */
+  .scanner-wrapper {
+    background: var(--card);
+    border: 1px solid var(--border);
+    position: relative;
+  }
+
+  .scanner-wrapper::before {
+    content: '// LIVE SCANNER';
+    position: absolute;
+    top: -1px;
+    right: 2rem;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    background: var(--accent2);
+    color: #fff;
+    padding: 0.2em 0.7em;
+    letter-spacing: 0.1em;
+  }
+
+  .scanner-tabs {
+    display: flex;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .scanner-tab {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0.9rem 1.5rem;
+    background: none;
+    border: none;
+    border-right: 1px solid var(--border);
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .scanner-tab.active {
+    color: var(--accent);
+    background: rgba(200,240,58,0.05);
+    border-bottom: 2px solid var(--accent);
+    margin-bottom: -1px;
+  }
+
+  .scanner-tab:hover:not(.active) { color: var(--text); background: rgba(255,255,255,0.02); }
+
+  .scanner-panel { display: none; padding: 2rem; }
+  .scanner-panel.active { display: block; }
+
+  .scanner-input-area {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  @media (max-width: 700px) { .scanner-input-area { grid-template-columns: 1fr; } }
+
+  .scanner-input-area textarea {
+    width: 100%;
+    height: 220px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: 'Space Mono', monospace;
+    font-size: 0.72rem;
+    padding: 1rem;
+    resize: vertical;
+    outline: none;
+    line-height: 1.6;
+    transition: border-color 0.2s;
+  }
+
+  .scanner-input-area textarea:focus { border-color: var(--accent); }
+  .scanner-input-area textarea::placeholder { color: var(--muted); }
+
+  .scanner-sample-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .scanner-sample-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.25rem;
+  }
+
+  .sample-btn {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--muted);
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    padding: 0.6rem 1rem;
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.2s;
+    letter-spacing: 0.05em;
+  }
+
+  .sample-btn:hover { border-color: var(--accent); color: var(--accent); background: rgba(200,240,58,0.05); }
+
+  .scanner-actions {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-bottom: 2rem;
+  }
+
+  .scan-btn {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0.85em 2em;
+    background: var(--accent);
+    color: var(--bg);
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .scan-btn:hover { background: #d8ff3a; transform: translateY(-1px); }
+  .scan-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+  .clear-btn {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--muted);
+    background: none;
+    border: 1px solid var(--border);
+    padding: 0.85em 1.5em;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.05em;
+  }
+
+  .clear-btn:hover { border-color: var(--accent2); color: var(--accent2); }
+
+  /* SCANNING ANIMATION */
+  .scan-progress {
+    display: none;
+    margin-bottom: 2rem;
+  }
+
+  .scan-progress.active { display: block; }
+
+  .scan-progress-bar {
+    height: 3px;
+    background: var(--border);
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 0.75rem;
+  }
+
+  .scan-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), #d8ff3a);
+    width: 0%;
+    transition: width 0.3s ease;
+  }
+
+  @keyframes scanPulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.4; }
+    100% { opacity: 1; }
+  }
+
+  .scan-status {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+    animation: scanPulse 1.2s infinite;
+  }
+
+  /* RESULTS */
+  .scanner-results { display: none; }
+  .scanner-results.active { display: block; }
+
+  .results-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .results-title {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.5rem;
+  }
+
+  .results-project {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .results-summary {
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  .rs-stat {
+    text-align: center;
+    min-width: 70px;
+  }
+
+  .rs-num {
+    font-family: 'Space Mono', monospace;
+    font-size: 1.8rem;
+    font-weight: 700;
+    display: block;
+    line-height: 1;
+    margin-bottom: 0.2rem;
+  }
+
+  .rs-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.55rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .rs-stat.safe .rs-num { color: #3af08a; }
+  .rs-stat.warn .rs-num { color: #f0c83a; }
+  .rs-stat.danger .rs-num { color: var(--accent2); }
+  .rs-stat.unknown .rs-num { color: var(--muted); }
+
+  /* RISK BANNER */
+  .risk-banner {
+    display: none;
+    padding: 1rem 1.5rem;
+    margin-bottom: 1.5rem;
+    border-left: 3px solid;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.72rem;
+    line-height: 1.6;
+  }
+
+  .risk-banner.danger { display: block; background: rgba(240,58,90,0.08); border-color: var(--accent2); color: var(--accent2); }
+  .risk-banner.warning { display: block; background: rgba(240,200,58,0.08); border-color: #f0c83a; color: #f0c83a; }
+  .risk-banner.clean { display: block; background: rgba(58,240,138,0.08); border-color: #3af08a; color: #3af08a; }
+
+  /* FILTER BAR */
+  .filter-bar {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.5rem;
+  }
+
+  .filter-btn {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0.4em 1em;
+    border: 1px solid var(--border);
+    background: none;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .filter-btn.active, .filter-btn:hover { border-color: var(--accent); color: var(--accent); background: rgba(200,240,58,0.05); }
+  .filter-btn.f-danger.active { border-color: var(--accent2); color: var(--accent2); background: rgba(240,58,90,0.05); }
+  .filter-btn.f-warn.active { border-color: #f0c83a; color: #f0c83a; background: rgba(240,200,58,0.05); }
+  .filter-btn.f-safe.active { border-color: #3af08a; color: #3af08a; background: rgba(58,240,138,0.05); }
+
+  /* PACKAGE LIST */
+  .package-list {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin-bottom: 2rem;
+  }
+
+  .pkg-row {
+    display: grid;
+    grid-template-columns: 1fr 140px 160px 80px;
+    align-items: center;
+    gap: 1rem;
+    background: var(--surface);
+    padding: 0.85rem 1rem;
+    border-left: 3px solid transparent;
+    transition: background 0.15s;
+    font-size: 0.82rem;
+  }
+
+  @media (max-width: 640px) {
+    .pkg-row { grid-template-columns: 1fr 100px; }
+    .pkg-row .pkg-version, .pkg-row .pkg-category { display: none; }
+  }
+
+  .pkg-row:hover { background: rgba(255,255,255,0.02); }
+  .pkg-row.danger { border-left-color: var(--accent2); background: rgba(240,58,90,0.04); }
+  .pkg-row.warning { border-left-color: #f0c83a; background: rgba(240,200,58,0.04); }
+  .pkg-row.safe { border-left-color: #3af08a; }
+  .pkg-row.unknown { border-left-color: var(--muted); }
+  .pkg-row.hidden { display: none; }
+
+  .pkg-name {
+    font-family: 'Space Mono', monospace;
+    font-weight: 700;
+    font-size: 0.8rem;
+  }
+
+  .pkg-row.danger .pkg-name { color: var(--accent2); }
+  .pkg-row.warning .pkg-name { color: #f0c83a; }
+  .pkg-row.safe .pkg-name { color: #3af08a; }
+  .pkg-row.unknown .pkg-name { color: var(--muted); }
+
+  .pkg-version {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--muted);
+  }
+
+  .pkg-license-tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.62rem;
+    padding: 0.25em 0.7em;
+    border: 1px solid;
+    letter-spacing: 0.05em;
+    display: inline-block;
+  }
+
+  .pkg-row.danger .pkg-license-tag { color: var(--accent2); border-color: rgba(240,58,90,0.4); background: rgba(240,58,90,0.08); }
+  .pkg-row.warning .pkg-license-tag { color: #f0c83a; border-color: rgba(240,200,58,0.4); background: rgba(240,200,58,0.08); }
+  .pkg-row.safe .pkg-license-tag { color: #3af08a; border-color: rgba(58,240,138,0.4); background: rgba(58,240,138,0.08); }
+  .pkg-row.unknown .pkg-license-tag { color: var(--muted); border-color: var(--border); }
+
+  .pkg-category {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  /* PDF DOWNLOAD */
+  .pdf-section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    padding: 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-top: 1.5rem;
+  }
+
+  .pdf-section-text h4 {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--accent);
+    margin-bottom: 0.3rem;
+    letter-spacing: 0.05em;
+  }
+
+  .pdf-section-text p {
+    font-size: 0.75rem;
+    color: var(--muted);
+    font-style: italic;
+  }
+
+  .pdf-btn {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0.85em 2em;
+    background: var(--accent);
+    color: var(--bg);
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+
+  .pdf-btn:hover { background: #d8ff3a; }
+
+  /* UPSELL */
+  .upsell-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-top: 2px solid var(--accent2);
+    padding: 1.5rem;
+    margin-top: 1rem;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 1.5rem;
+    align-items: center;
+  }
+
+  @media (max-width: 600px) { .upsell-card { grid-template-columns: 1fr; } }
+
+  .upsell-card h4 {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--accent2);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 0.4rem;
+  }
+
+  .upsell-card p { font-size: 0.8rem; color: var(--muted); font-style: italic; }
+
+  .upsell-btn {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 0.8em 1.5em;
+    background: var(--accent2);
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: opacity 0.2s;
+    text-decoration: none;
+    display: inline-block;
+  }
+
+  .upsell-btn:hover { opacity: 0.85; }
+
+  /* COMPATIBILITY CHECKER */
+  .compat-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    margin-bottom: 2rem;
+  }
+
+  @media (max-width: 640px) { .compat-wrapper { grid-template-columns: 1fr; } }
+
+  .compat-select-group label {
+    display: block;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.5rem;
+  }
+
+  .compat-select-group select {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: 'Space Mono', monospace;
+    font-size: 0.78rem;
+    padding: 0.75rem 1rem;
+    outline: none;
+    cursor: pointer;
+    transition: border-color 0.2s;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236b6b5a' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+  }
+
+  .compat-select-group select:focus { border-color: var(--accent); }
+
+  .compat-result {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 2rem;
+    text-align: center;
+    min-height: 160px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .compat-icon {
+    font-size: 2.5rem;
+    line-height: 1;
+  }
+
+  .compat-verdict {
+    font-family: 'Space Mono', monospace;
+    font-size: 1.2rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+  }
+
+  .compat-verdict.compatible { color: #3af08a; }
+  .compat-verdict.incompatible { color: var(--accent2); }
+  .compat-verdict.conditional { color: #f0c83a; }
+  .compat-verdict.select { color: var(--muted); }
+
+  .compat-explanation {
+    font-size: 0.82rem;
+    color: var(--muted);
+    font-style: italic;
+    max-width: 480px;
+    line-height: 1.6;
+  }
+  /* ===================== END SCANNER STYLES ===================== */
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">OSS.GUIDE</div>
+  <ul class="nav-links">
+    <li><a href="#picker">License Picker</a></li>
+    <li><a href="#scanner" style="color:var(--accent2)">⚡ Scanner</a></li>
+    <li><a href="#compare">Compare</a></li>
+    <li><a href="#timeline">History</a></li>
+    <li><a href="#faq">FAQ</a></li>
+    <li><a href="#newsletter" style="color:var(--accent)">Free Guide ↓</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-inner">
+    <div class="badge">Open Source Intelligence</div>
+    <h1>Every Open Source<br>License <em>Explained</em><br>& Compared</h1>
+    <p class="hero-sub">The interactive reference that replaces 12 browser tabs. Find your license, understand your obligations, avoid costly compliance mistakes.</p>
+    <div class="hero-cta-group">
+      <a href="#picker" class="btn btn-primary">Find My License →</a>
+      <a href="#compare" class="btn btn-outline">Compare All Licenses</a>
+    </div>
+  </div>
+</div>
+
+<!-- STATS BAR -->
+<div class="stats-bar">
+  <div class="stat"><span class="stat-num">90%+</span><span class="stat-label">of apps use open source</span></div>
+  <div class="stat"><span class="stat-num">300+</span><span class="stat-label">recognized licenses exist</span></div>
+  <div class="stat"><span class="stat-num">$525B</span><span class="stat-label">value of OSS globally</span></div>
+  <div class="stat"><span class="stat-num">60s</span><span class="stat-label">to find your license below</span></div>
+</div>
+
+<!-- LICENSE PICKER -->
+<section id="picker">
+  <p class="section-label">Interactive Tool</p>
+  <h2>Find Your <em>Ideal</em> License</h2>
+  <p class="section-intro">Answer 4 questions. Get a clear recommendation with full breakdown.</p>
+
+  <div class="tool-wrapper">
+    <!-- Step 1 -->
+    <div class="quiz-step active" id="step-1">
+      <div class="quiz-progress">STEP 01 / 04 — Project Type
+        <div class="progress-bar"><div class="progress-fill" style="width:25%"></div></div>
+      </div>
+      <p class="quiz-q">What best describes your project?</p>
+      <div class="quiz-options">
+        <button class="quiz-opt" onclick="next(2,'app')"><span class="opt-icon">📦</span>Standalone application or tool</button>
+        <button class="quiz-opt" onclick="next(2,'lib')"><span class="opt-icon">🔧</span>Library or framework others will use</button>
+        <button class="quiz-opt" onclick="next(2,'service')"><span class="opt-icon">☁️</span>Service / SaaS / web app</button>
+        <button class="quiz-opt" onclick="next(2,'data')"><span class="opt-icon">📊</span>Data, docs, or content</button>
+      </div>
+    </div>
+
+    <!-- Step 2 -->
+    <div class="quiz-step" id="step-2">
+      <div class="quiz-progress">STEP 02 / 04 — Commercial Goals
+        <div class="progress-bar"><div class="progress-fill" style="width:50%"></div></div>
+      </div>
+      <p class="quiz-q">What are your commercial intentions?</p>
+      <div class="quiz-options">
+        <button class="quiz-opt" onclick="next(3,'none')"><span class="opt-icon">🎓</span>Purely open / educational — no commercial interest</button>
+        <button class="quiz-opt" onclick="next(3,'maybe')"><span class="opt-icon">🌱</span>Maybe commercial someday, keeping options open</button>
+        <button class="quiz-opt" onclick="next(3,'yes')"><span class="opt-icon">💼</span>Definitely commercial — building a business around it</button>
+        <button class="quiz-opt" onclick="next(3,'dual')"><span class="opt-icon">⚖️</span>Dual licensing — free for OSS, paid for commercial</button>
+      </div>
+    </div>
+
+    <!-- Step 3 -->
+    <div class="quiz-step" id="step-3">
+      <div class="quiz-progress">STEP 03 / 04 — Sharing Requirements
+        <div class="progress-bar"><div class="progress-fill" style="width:75%"></div></div>
+      </div>
+      <p class="quiz-q">Do you want others who modify your code to share their changes?</p>
+      <div class="quiz-options">
+        <button class="quiz-opt" onclick="next(4,'yes-strong')"><span class="opt-icon">🔒</span>Yes — all derivatives must stay open source</button>
+        <button class="quiz-opt" onclick="next(4,'yes-weak')"><span class="opt-icon">🔓</span>Only changes to my files, not the whole product</button>
+        <button class="quiz-opt" onclick="next(4,'no')"><span class="opt-icon">🔑</span>No — let anyone do anything with it</button>
+      </div>
+    </div>
+
+    <!-- Step 4 -->
+    <div class="quiz-step" id="step-4">
+      <div class="quiz-progress">STEP 04 / 04 — Patents
+        <div class="progress-bar"><div class="progress-fill" style="width:90%"></div></div>
+      </div>
+      <p class="quiz-q">Do you want explicit patent protection for contributors and users?</p>
+      <div class="quiz-options">
+        <button class="quiz-opt" onclick="showResult()"><span class="opt-icon">🛡️</span>Yes — patent grant is important</button>
+        <button class="quiz-opt" onclick="showResult()"><span class="opt-icon">✌️</span>No — keep it simple, no patent language</button>
+      </div>
+    </div>
+
+    <!-- RESULT -->
+    <div class="result-card" id="result">
+      <div id="result-content"></div>
+      <button class="reset-btn" onclick="resetQuiz()">← Start over</button>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== LICENSE SCANNER ===================== -->
+<section id="scanner">
+  <p class="section-label">Free Tool — No Signup Required</p>
+  <h2>Package.json <em>License Scanner</em></h2>
+  <p class="section-intro">Paste your package.json. Get an instant compliance report — every dependency categorized, risks flagged, PDF ready to share with your legal team.</p>
+
+  <div class="scanner-wrapper fade-up">
+    <div class="scanner-tabs">
+      <button class="scanner-tab active" onclick="switchTab('scan', this)">⚡ Scanner</button>
+      <button class="scanner-tab" onclick="switchTab('compat', this)">🔀 Compatibility Checker</button>
+    </div>
+
+    <!-- SCAN PANEL -->
+    <div class="scanner-panel active" id="panel-scan">
+      <div class="scanner-input-area">
+        <div>
+          <p style="font-family:'Space Mono',monospace;font-size:0.6rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-bottom:0.5rem;">Paste your package.json</p>
+          <textarea id="pkg-input" placeholder='{
+  "name": "my-project",
+  "dependencies": {
+    "express": "^4.18.2",
+    "react": "^18.2.0",
+    "lodash": "^4.17.21"
+  }
+}'></textarea>
+        </div>
+        <div class="scanner-sample-panel">
+          <p class="scanner-sample-label">Or load a sample:</p>
+          <button class="sample-btn" onclick="loadSample('saas')">📦 SaaS App (React + Node)</button>
+          <button class="sample-btn" onclick="loadSample('risky')">⚠️ High-Risk Project (GPL deps)</button>
+          <button class="sample-btn" onclick="loadSample('clean')">✅ Clean Permissive Stack</button>
+          <button class="sample-btn" onclick="loadSample('mixed')">🔀 Mixed License Project</button>
+          <div style="margin-top:auto;padding-top:1rem;border-top:1px solid var(--border)">
+            <p style="font-size:0.72rem;color:var(--muted);font-style:italic;line-height:1.6;">Scans both <code style="font-family:'Space Mono',monospace;color:var(--accent);font-size:0.7rem">dependencies</code> and <code style="font-family:'Space Mono',monospace;color:var(--accent);font-size:0.7rem">devDependencies</code>. Data fetched live from npm registry.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="scanner-actions">
+        <button class="scan-btn" id="scan-btn" onclick="runScan()">
+          <span id="scan-btn-text">⚡ Run Compliance Scan</span>
+        </button>
+        <button class="clear-btn" onclick="clearScan()">Clear</button>
+        <span style="font-family:'Space Mono',monospace;font-size:0.6rem;color:var(--muted);margin-left:auto;">Results are not stored. All scanning happens in your browser.</span>
+      </div>
+
+      <div class="scan-progress" id="scan-progress">
+        <div class="scan-progress-bar"><div class="scan-progress-fill" id="scan-fill"></div></div>
+        <div class="scan-status" id="scan-status">Initializing scan...</div>
+      </div>
+
+      <div class="scanner-results" id="scan-results">
+        <div class="results-header">
+          <div>
+            <div class="results-title">Compliance Report</div>
+            <div class="results-project" id="result-project-name">—</div>
+          </div>
+          <div class="results-summary">
+            <div class="rs-stat danger"><span class="rs-num" id="count-danger">0</span><span class="rs-label">High Risk</span></div>
+            <div class="rs-stat warn"><span class="rs-num" id="count-warn">0</span><span class="rs-label">Review</span></div>
+            <div class="rs-stat safe"><span class="rs-num" id="count-safe">0</span><span class="rs-label">Compliant</span></div>
+            <div class="rs-stat unknown"><span class="rs-num" id="count-unknown">0</span><span class="rs-label">Unknown</span></div>
+          </div>
+        </div>
+
+        <div class="risk-banner danger" id="banner-danger">
+          ⛔ CRITICAL: GPL or AGPL dependencies detected. If you distribute this software or run it as a SaaS, you may have source disclosure obligations. Review flagged packages immediately.
+        </div>
+        <div class="risk-banner warning" id="banner-warning">
+          ⚠ REVIEW REQUIRED: Weak copyleft or restrictive licenses detected. These may limit how you can distribute or integrate certain components.
+        </div>
+        <div class="risk-banner clean" id="banner-clean">
+          ✓ CLEAN: No high-risk licenses detected. All scanned dependencies use permissive licenses compatible with commercial use.
+        </div>
+
+        <div class="filter-bar">
+          <span style="font-family:'Space Mono',monospace;font-size:0.6rem;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;margin-right:0.5rem;align-self:center;">Filter:</span>
+          <button class="filter-btn active" onclick="filterPkgs('all', this)">All</button>
+          <button class="filter-btn f-danger" onclick="filterPkgs('danger', this)">High Risk</button>
+          <button class="filter-btn f-warn" onclick="filterPkgs('warning', this)">Review</button>
+          <button class="filter-btn f-safe" onclick="filterPkgs('safe', this)">Compliant</button>
+          <button class="filter-btn" onclick="filterPkgs('unknown', this)">Unknown</button>
+        </div>
+
+        <div style="font-family:'Space Mono',monospace;font-size:0.55rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);padding:0.5rem 1rem;background:var(--surface);display:grid;grid-template-columns:1fr 140px 160px 80px;gap:1rem;margin-bottom:2px;">
+          <span>Package</span><span>Version</span><span>License</span><span>Category</span>
+        </div>
+        <div class="package-list" id="package-list"></div>
+
+        <div class="pdf-section">
+          <div class="pdf-section-text">
+            <h4>📄 Download Compliance Report</h4>
+            <p>Full PDF report with license obligations, risk summary, and remediation notes. Share with your legal team.</p>
+          </div>
+          <button class="pdf-btn" onclick="downloadPDF()">Download PDF Report</button>
+        </div>
+
+        <div class="upsell-card">
+          <div>
+            <h4>⚠ Found GPL or AGPL dependencies?</h4>
+            <p>Get the complete OSS Compliance Starter Kit — policy template, SBOM spreadsheet, license obligation checklist, and compatibility quick-reference card. Used by 1,200+ developers and legal teams.</p>
+          </div>
+          <a href="#newsletter" class="upsell-btn">Get Compliance Kit →</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- COMPATIBILITY PANEL -->
+    <div class="scanner-panel" id="panel-compat">
+      <p style="font-size:0.88rem;color:var(--muted);font-style:italic;margin-bottom:2rem;">Select two licenses to instantly check if they can be combined in the same project.</p>
+
+      <div class="compat-wrapper">
+        <div class="compat-select-group">
+          <label>License A — Your project</label>
+          <select id="lic-a" onchange="checkCompat()">
+            <option value="">Select a license...</option>
+            <option value="MIT">MIT</option>
+            <option value="Apache-2.0">Apache 2.0</option>
+            <option value="BSD-2-Clause">BSD 2-Clause</option>
+            <option value="BSD-3-Clause">BSD 3-Clause</option>
+            <option value="ISC">ISC</option>
+            <option value="GPL-2.0">GPL v2</option>
+            <option value="GPL-3.0">GPL v3</option>
+            <option value="LGPL-2.1">LGPL v2.1</option>
+            <option value="LGPL-3.0">LGPL v3</option>
+            <option value="AGPL-3.0">AGPL v3</option>
+            <option value="MPL-2.0">MPL 2.0</option>
+            <option value="EUPL-1.2">EUPL 1.2</option>
+          </select>
+        </div>
+        <div class="compat-select-group">
+          <label>License B — Dependency</label>
+          <select id="lic-b" onchange="checkCompat()">
+            <option value="">Select a license...</option>
+            <option value="MIT">MIT</option>
+            <option value="Apache-2.0">Apache 2.0</option>
+            <option value="BSD-2-Clause">BSD 2-Clause</option>
+            <option value="BSD-3-Clause">BSD 3-Clause</option>
+            <option value="ISC">ISC</option>
+            <option value="GPL-2.0">GPL v2</option>
+            <option value="GPL-3.0">GPL v3</option>
+            <option value="LGPL-2.1">LGPL v2.1</option>
+            <option value="LGPL-3.0">LGPL v3</option>
+            <option value="AGPL-3.0">AGPL v3</option>
+            <option value="MPL-2.0">MPL 2.0</option>
+            <option value="EUPL-1.2">EUPL 1.2</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="compat-result" id="compat-result">
+        <div class="compat-icon">🔍</div>
+        <div class="compat-verdict select">Select two licenses above</div>
+        <div class="compat-explanation">The compatibility result and explanation will appear here.</div>
+      </div>
+
+      <div style="background:var(--surface);border:1px solid var(--border);padding:1.5rem;">
+        <p style="font-family:'Space Mono',monospace;font-size:0.6rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-bottom:1rem;">Quick Reference — Compatibility at a glance</p>
+        <div style="overflow-x:auto;">
+          <table style="font-family:'Space Mono',monospace;font-size:0.6rem;border-collapse:collapse;width:100%;min-width:500px;">
+            <thead>
+              <tr>
+                <th style="padding:0.4rem 0.6rem;text-align:left;color:var(--muted);border-bottom:1px solid var(--border)">Your License ↓ / Dependency →</th>
+                <th style="padding:0.4rem 0.6rem;color:var(--muted);border-bottom:1px solid var(--border)">MIT</th>
+                <th style="padding:0.4rem 0.6rem;color:var(--muted);border-bottom:1px solid var(--border)">Apache 2</th>
+                <th style="padding:0.4rem 0.6rem;color:var(--muted);border-bottom:1px solid var(--border)">GPL v2</th>
+                <th style="padding:0.4rem 0.6rem;color:var(--muted);border-bottom:1px solid var(--border)">GPL v3</th>
+                <th style="padding:0.4rem 0.6rem;color:var(--muted);border-bottom:1px solid var(--border)">LGPL</th>
+                <th style="padding:0.4rem 0.6rem;color:var(--muted);border-bottom:1px solid var(--border)">AGPL</th>
+                <th style="padding:0.4rem 0.6rem;color:var(--muted);border-bottom:1px solid var(--border)">MPL 2</th>
+              </tr>
+            </thead>
+            <tbody id="compat-matrix"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- ===================== END SCANNER ===================== -->
+
+<!-- COMPARISON TABLE -->
+<section id="compare">
+  <p class="section-label">Full Reference</p>
+  <h2>License <em>Comparison</em> Matrix</h2>
+  <p class="section-intro">Every major license side-by-side. Click any row to learn more.</p>
+
+  <div class="compare-table-wrap fade-up">
+    <table class="compare-table">
+      <thead>
+        <tr>
+          <th>License</th>
+          <th>Type</th>
+          <th>Commercial Use</th>
+          <th>Patent Grant</th>
+          <th>Copyleft Strength</th>
+          <th>Modify & Distribute</th>
+          <th>Network Use Triggers</th>
+          <th>Best For</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="lic-name">MIT</td>
+          <td><span class="tag tag-type">Permissive</span></td>
+          <td><span class="tag tag-yes">YES</span></td>
+          <td><span class="tag tag-no">NO</span></td>
+          <td>None</td>
+          <td><span class="tag tag-yes">YES</span></td>
+          <td><span class="tag tag-no">NO</span></td>
+          <td>Maximum adoption, libs</td>
+        </tr>
+        <tr>
+          <td class="lic-name">Apache 2.0</td>
+          <td><span class="tag tag-type">Permissive</span></td>
+          <td><span class="tag tag-yes">YES</span></td>
+          <td><span class="tag tag-yes">YES</span></td>
+          <td>None</td>
+          <td><span class="tag tag-yes">YES</span></td>
+          <td><span class="tag tag-no">NO</span></td>
+          <td>Enterprise, patent-safe</td>
+        </tr>
+        <tr>
+          <td class="lic-name">BSD 2-Clause</td>
+          <td><span class="tag tag-type">Permissive</span></td>
+          <td><span class="tag tag-yes">YES</span></td>
+          <td><span class="tag tag-no">NO</span></td>
+          <td>None</td>
+          <td><span class="tag tag-yes">YES</span></td>
+          <td><span class="tag tag-no">NO</span></td>
+          <td>Academia, simplicity</td>
+        </tr>
+        <tr>
+          <td class="lic-name">GPL v2</td>
+          <td><span class="tag tag-type">Copyleft</span></td>
+          <td><span class="tag tag-partial">RESTRICTED</span></td>
+          <td><span class="tag tag-no">NO</span></td>
+          <td>Strong</td>
+          <td><span class="tag tag-yes">YES*</span></td>
+          <td><span class="tag tag-no">NO</span></td>
+          <td>OS tools, protecting OSS</td>
+        </tr>
+        <tr>
+          <td class="lic-name">GPL v3</td>
+          <td><span class="tag tag-type">Copyleft</span></td>
+          <td><span class="tag tag-partial">RESTRICTED</span></td>
+          <td><span class="tag tag-yes">YES</span></td>
+          <td>Strong</td>
+          <td><span class="tag tag-yes">YES*</span></td>
+          <td><span class="tag tag-no">NO</span></td>
+          <td>Anti-tivoization, modern OSS</td>
+        </tr>
+        <tr>
+          <td class="lic-name">LGPL v3</td>
+          <td><span class="tag tag-type">Weak Copyleft</span></td>
+          <td><span class="tag tag-yes">YES</span></td>
+          <td><span class="tag tag-yes">YES</span></td>
+          <td>Weak (file-level)</td>
+          <td><span class="tag tag-yes">YES*</span></td>
+          <td><span class="tag tag-no">NO</span></td>
+          <td>Libraries used in proprietary apps</td>
+        </tr>
+        <tr>
+          <td class="lic-name">AGPL v3</td>
+          <td><span class="tag tag-type">Strong Copyleft</span></td>
+          <td><span class="tag tag-partial">RESTRICTED</span></td>
+          <td><span class="tag tag-yes">YES</span></td>
+          <td>Strong + Network</td>
+          <td><span class="tag tag-yes">YES*</span></td>
+          <td><span class="tag tag-yes">YES</span></td>
+          <td>SaaS anti-loophole, Mongo pattern</td>
+        </tr>
+        <tr>
+          <td class="lic-name">MPL 2.0</td>
+          <td><span class="tag tag-type">Weak Copyleft</span></td>
+          <td><span class="tag tag-yes">YES</span></td>
+          <td><span class="tag tag-yes">YES</span></td>
+          <td>File-level</td>
+          <td><span class="tag tag-yes">YES*</span></td>
+          <td><span class="tag tag-no">NO</span></td>
+          <td>Firefox, middle-ground</td>
+        </tr>
+        <tr>
+          <td class="lic-name">ISC</td>
+          <td><span class="tag tag-type">Permissive</span></td>
+          <td><span class="tag tag-yes">YES</span></td>
+          <td><span class="tag tag-no">NO</span></td>
+          <td>None</td>
+          <td><span class="tag tag-yes">YES</span></td>
+          <td><span class="tag tag-no">NO</span></td>
+          <td>OpenBSD ecosystem, minimal</td>
+        </tr>
+        <tr>
+          <td class="lic-name">EUPL v1.2</td>
+          <td><span class="tag tag-type">Copyleft</span></td>
+          <td><span class="tag tag-yes">YES</span></td>
+          <td><span class="tag tag-yes">YES</span></td>
+          <td>Strong</td>
+          <td><span class="tag tag-yes">YES*</span></td>
+          <td><span class="tag tag-partial">PARTIAL</span></td>
+          <td>EU public sector, multilingual</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <p style="font-size:0.78rem;color:var(--muted);font-style:italic;margin-top:1rem;font-family:'Space Mono',monospace;">* Derivatives must use same or compatible license</p>
+</section>
+
+<!-- TIMELINE -->
+<section id="timeline" style="max-width:800px">
+  <p class="section-label">Historical Context</p>
+  <h2>40 Years of Open Source <em>Licensing</em></h2>
+  <p class="section-intro">How we got from a frustrated MIT lab to 90% of modern software.</p>
+
+  <div class="timeline fade-up">
+    <div class="tl-item">
+      <div class="tl-year">1983</div>
+      <div class="tl-title">GNU Project Founded</div>
+      <div class="tl-desc">Richard Stallman launches GNU Project after frustration with proprietary printer firmware. Defines the "four freedoms" of software.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-year">1989</div>
+      <div class="tl-title">GPL v1 Released</div>
+      <div class="tl-desc">The first General Public License introduces copyleft — the radical idea that freedom should be enforced through licensing.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-year">1991</div>
+      <div class="tl-title">MIT License & Linux</div>
+      <div class="tl-desc">Linus Torvalds releases Linux under GPL v2. MIT License gains traction at universities for its simplicity.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-year">1998</div>
+      <div class="tl-title">OSI Founded, "Open Source" Coined</div>
+      <div class="tl-desc">Eric Raymond and others create the Open Source Initiative, publishing the Open Source Definition with 10 criteria.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-year">2004</div>
+      <div class="tl-title">Apache 2.0 — Patent Era Begins</div>
+      <div class="tl-desc">Apache License 2.0 released with explicit patent grants — a critical addition as software patent wars intensify.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-year">2007</div>
+      <div class="tl-title">GPL v3 & AGPL</div>
+      <div class="tl-desc">GPLv3 tackles hardware locks (Tivoization) and DRM. AGPL closes the "SaaS loophole" — using OSS over a network without sharing source.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-year">2018–2023</div>
+      <div class="tl-title">Commons Clause & Business Source</div>
+      <div class="tl-desc">HashiCorp, MongoDB, Redis shift to Business Source License (BUSL) and Server Side Public License (SSPL) to prevent cloud giants from commoditizing their work.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-year">2024–Now</div>
+      <div class="tl-title">AI Training Data Rights</div>
+      <div class="tl-desc">New licensing questions emerge around whether using code to train AI models constitutes copyright infringement — a debate that will shape the next decade.</div>
+    </div>
+  </div>
+</section>
+
+<!-- EMAIL CAPTURE -->
+<section id="newsletter" style="padding: 4rem 2rem;">
+  <div class="email-section fade-up">
+    <div>
+      <h3>Get the Free Compliance Checklist</h3>
+      <p>12 critical steps before shipping any open source software. Used by 4,000+ developers.</p>
+    </div>
+    <div>
+      <div class="email-form">
+        <input type="email" placeholder="your@email.com" id="email-input">
+        <button onclick="submitEmail()">GET IT FREE</button>
+      </div>
+      <p style="font-size:0.7rem;margin-top:0.5rem;font-style:italic;">No spam. Unsubscribe anytime.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq" style="max-width:800px">
+  <p class="section-label">Common Questions</p>
+  <h2>License <em>FAQ</em></h2>
+
+  <div class="faq-list fade-up">
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">What happens if I ship code with no license? <span class="faq-icon">+</span></button>
+      <div class="faq-a"><p>Without a license, copyright law gives you all rights by default — which means nobody else has the right to use, modify, or distribute your code. All rights reserved is the legal default. This is often unintentional and cuts off collaboration entirely.</p></div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">Can I change my project's license later? <span class="faq-icon">+</span></button>
+      <div class="faq-a"><p>Yes, but only if you own all the copyright (or have contributor agreements). If others have contributed under the original license, you'd need their permission to re-license. This is why companies like Mozilla have contributor license agreements (CLAs).</p></div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">Does using a GPL library in my app infect my whole codebase? <span class="faq-icon">+</span></button>
+      <div class="faq-a"><p>It depends on how you use it. Static linking typically triggers GPL copyleft requirements. Dynamic linking via LGPL is designed to avoid this. Network access (APIs) generally does not trigger GPL — though AGPL closes that loophole. This is a nuanced legal question where context matters enormously.</p></div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">What's the difference between MIT and ISC? <span class="faq-icon">+</span></button>
+      <div class="faq-a"><p>Functionally identical for most practical purposes. ISC is slightly shorter (no separate permission notice paragraph). ISC was created to eliminate ambiguity in the old BSD advertising clause. Node.js uses ISC for this reason. Either is a safe choice for permissive licensing.</p></div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">How does AGPL affect SaaS products? <span class="faq-icon">+</span></button>
+      <div class="faq-a"><p>AGPL requires that if you run AGPL software as a network service (SaaS), you must make the source code available to users of that service — even if you never distribute the software itself. This is why companies like Google have internal policies banning AGPL dependencies.</p></div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">Is Creative Commons appropriate for software? <span class="faq-icon">+</span></button>
+      <div class="faq-a"><p>Generally no. Creative Commons licenses were designed for creative works (text, images, music) and lack provisions critical for software (warranty disclaimers, patent grants, source code requirements). For software, use OSI-approved licenses. Use CC for documentation and datasets.</p></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-logo">OSS.GUIDE</div>
+  <p>An independent open source licensing reference. Not legal advice. Consult a qualified attorney for compliance decisions.</p>
+  <p style="margin-top:0.5rem;">Built for developers, legal teams, and founders navigating the open source ecosystem.</p>
+</footer>
+
+<script>
+  // Quiz state
+  let answers = {};
+
+  function next(step, answer) {
+    const key = step - 1;
+    answers[key] = answer;
+    document.querySelectorAll('.quiz-step').forEach(s => s.classList.remove('active'));
+    const next = document.getElementById('step-' + step);
+    if (next) next.classList.add('active');
+    else showResult();
+  }
+
+  function showResult() {
+    document.querySelectorAll('.quiz-step').forEach(s => s.classList.remove('active'));
+    const rc = document.getElementById('result');
+    rc.classList.add('show');
+
+    const type = answers[1];
+    const commercial = answers[2];
+    const sharing = answers[3];
+
+    let license, tagline, can, must, cannot;
+
+    if (sharing === 'yes-strong') {
+      if (commercial === 'yes' || commercial === 'dual') {
+        license = 'GPL v3 + Dual License';
+        tagline = 'Keep it open. Charge for commercial use separately.';
+      } else {
+        license = 'GPL v3';
+        tagline = 'Maximum copyleft — all derivatives stay open source forever.';
+      }
+      can = ['Use commercially (with GPL terms)', 'Modify and distribute', 'Patent use'];
+      must = ['Disclose source code', 'Use same license for derivatives', 'State changes'];
+      cannot = ['Use in proprietary software without compliance', 'Sublicense', 'Hold liable'];
+    } else if (sharing === 'yes-weak') {
+      if (type === 'service') {
+        license = 'AGPL v3';
+        tagline = 'Copyleft that covers SaaS deployments — closes the network loophole.';
+      } else if (type === 'lib') {
+        license = 'MPL 2.0';
+        tagline = 'File-level copyleft — share changes to your files, not your product.';
+      } else {
+        license = 'LGPL v3';
+        tagline = 'Library-grade copyleft — usable in proprietary apps without contamination.';
+      }
+      can = ['Use in proprietary products (with conditions)', 'Commercial use', 'Modify'];
+      must = ['Disclose source of modified files', 'Preserve copyright notices', 'State changes'];
+      cannot = ['Hold authors liable', 'Use trademarks', 'Remove patent grants'];
+    } else {
+      // permissive
+      if (commercial === 'yes' || commercial === 'maybe') {
+        license = 'Apache 2.0';
+        tagline = 'Permissive with explicit patent protection — the enterprise-safe choice.';
+      } else {
+        license = 'MIT';
+        tagline = 'The world\'s most popular open source license. Simple, permissive, beloved.';
+      }
+      can = ['Commercial use freely', 'Modify and distribute', 'Patent use (Apache) or unrestricted (MIT)', 'Private use', 'Sublicense'];
+      must = ['Include copyright notice', 'Include license text', 'Document changes (Apache only)'];
+      cannot = ['Hold authors liable', 'Use trademarks', 'Remove attribution'];
+    }
+
+    document.getElementById('result-content').innerHTML = `
+      <div class="result-license-name">${license}</div>
+      <div class="result-tagline">${tagline}</div>
+      <div class="result-grid">
+        <div class="result-col can">
+          <h4>✓ CAN</h4>
+          <ul>${can.map(i=>`<li>${i}</li>`).join('')}</ul>
+        </div>
+        <div class="result-col must">
+          <h4>⚠ MUST</h4>
+          <ul>${must.map(i=>`<li>${i}</li>`).join('')}</ul>
+        </div>
+        <div class="result-col cannot">
+          <h4>✕ CANNOT</h4>
+          <ul>${cannot.map(i=>`<li>${i}</li>`).join('')}</ul>
+        </div>
+      </div>
+      <p style="font-size:0.8rem;color:var(--muted);font-style:italic;font-family:'Space Mono',monospace;">This is educational guidance, not legal advice. Consult a qualified attorney for your specific situation.</p>
+    `;
+  }
+
+  function resetQuiz() {
+    answers = {};
+    document.getElementById('result').classList.remove('show');
+    document.querySelectorAll('.quiz-step').forEach(s => s.classList.remove('active'));
+    document.getElementById('step-1').classList.add('active');
+  }
+
+  // FAQ accordion
+  function toggleFaq(btn) {
+    const item = btn.closest('.faq-item');
+    const wasOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+    if (!wasOpen) item.classList.add('open');
+  }
+
+  // Email capture
+  function submitEmail() {
+    const email = document.getElementById('email-input').value;
+    if (!email || !email.includes('@')) {
+      alert('Please enter a valid email address.');
+      return;
+    }
+    document.getElementById('email-input').value = '';
+    document.querySelector('.email-section').innerHTML = `
+      <div style="text-align:center;width:100%;padding:1rem 0;">
+        <div style="font-family:'Space Mono',monospace;font-size:1.5rem;color:var(--accent);margin-bottom:0.5rem;">✓</div>
+        <h3 style="margin-bottom:0.5rem;">You're in.</h3>
+        <p style="color:var(--muted);font-style:italic;">Checklist on its way to <strong style="color:var(--text)">${email}</strong></p>
+      </div>
+    `;
+  }
+
+  // Scroll animations
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.15 });
+
+  document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+  // Smooth scroll
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      const target = document.querySelector(a.getAttribute('href'));
+      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+
+  // ===================== SCANNER LOGIC =====================
+
+  // License database — known licenses mapped to risk category
+  const LICENSE_DB = {
+    // Permissive — safe
+    'MIT': { category: 'Permissive', risk: 'safe', label: 'MIT' },
+    'ISC': { category: 'Permissive', risk: 'safe', label: 'ISC' },
+    'BSD-2-Clause': { category: 'Permissive', risk: 'safe', label: 'BSD-2-Clause' },
+    'BSD-3-Clause': { category: 'Permissive', risk: 'safe', label: 'BSD-3-Clause' },
+    'Apache-2.0': { category: 'Permissive', risk: 'safe', label: 'Apache-2.0' },
+    '0BSD': { category: 'Permissive', risk: 'safe', label: '0BSD' },
+    'Unlicense': { category: 'Public Domain', risk: 'safe', label: 'Unlicense' },
+    'CC0-1.0': { category: 'Public Domain', risk: 'safe', label: 'CC0-1.0' },
+    'BlueOak-1.0.0': { category: 'Permissive', risk: 'safe', label: 'BlueOak-1.0' },
+    'Python-2.0': { category: 'Permissive', risk: 'safe', label: 'Python-2.0' },
+    'Artistic-2.0': { category: 'Permissive', risk: 'safe', label: 'Artistic-2.0' },
+    'WTFPL': { category: 'Permissive', risk: 'safe', label: 'WTFPL' },
+    'Zlib': { category: 'Permissive', risk: 'safe', label: 'Zlib' },
+    'CC-BY-4.0': { category: 'Permissive', risk: 'safe', label: 'CC-BY-4.0' },
+
+    // Weak copyleft — warning
+    'MPL-2.0': { category: 'Weak Copyleft', risk: 'warning', label: 'MPL-2.0' },
+    'LGPL-2.0': { category: 'Weak Copyleft', risk: 'warning', label: 'LGPL-2.0' },
+    'LGPL-2.1': { category: 'Weak Copyleft', risk: 'warning', label: 'LGPL-2.1' },
+    'LGPL-3.0': { category: 'Weak Copyleft', risk: 'warning', label: 'LGPL-3.0' },
+    'LGPL-3.0-only': { category: 'Weak Copyleft', risk: 'warning', label: 'LGPL-3.0' },
+    'LGPL-2.1-only': { category: 'Weak Copyleft', risk: 'warning', label: 'LGPL-2.1' },
+    'EUPL-1.2': { category: 'Weak Copyleft', risk: 'warning', label: 'EUPL-1.2' },
+    'EUPL-1.1': { category: 'Weak Copyleft', risk: 'warning', label: 'EUPL-1.1' },
+    'EPL-1.0': { category: 'Weak Copyleft', risk: 'warning', label: 'EPL-1.0' },
+    'EPL-2.0': { category: 'Weak Copyleft', risk: 'warning', label: 'EPL-2.0' },
+    'CDDL-1.0': { category: 'Weak Copyleft', risk: 'warning', label: 'CDDL-1.0' },
+    'OSL-3.0': { category: 'Weak Copyleft', risk: 'warning', label: 'OSL-3.0' },
+    'CC-BY-SA-4.0': { category: 'Copyleft', risk: 'warning', label: 'CC-BY-SA-4.0' },
+
+    // Strong copyleft — danger
+    'GPL-2.0': { category: 'Strong Copyleft', risk: 'danger', label: 'GPL-2.0' },
+    'GPL-2.0-only': { category: 'Strong Copyleft', risk: 'danger', label: 'GPL-2.0' },
+    'GPL-2.0-or-later': { category: 'Strong Copyleft', risk: 'danger', label: 'GPL-2.0+' },
+    'GPL-3.0': { category: 'Strong Copyleft', risk: 'danger', label: 'GPL-3.0' },
+    'GPL-3.0-only': { category: 'Strong Copyleft', risk: 'danger', label: 'GPL-3.0' },
+    'GPL-3.0-or-later': { category: 'Strong Copyleft', risk: 'danger', label: 'GPL-3.0+' },
+    'AGPL-3.0': { category: 'Network Copyleft', risk: 'danger', label: 'AGPL-3.0' },
+    'AGPL-3.0-only': { category: 'Network Copyleft', risk: 'danger', label: 'AGPL-3.0' },
+    'AGPL-3.0-or-later': { category: 'Network Copyleft', risk: 'danger', label: 'AGPL-3.0+' },
+    'SSPL-1.0': { category: 'Strong Copyleft', risk: 'danger', label: 'SSPL-1.0' },
+    'BUSL-1.1': { category: 'Source-Available', risk: 'danger', label: 'BUSL-1.1' },
+    'Commons-Clause': { category: 'Restricted', risk: 'danger', label: 'Commons-Clause' },
+  };
+
+  function normalizeLicense(raw) {
+    if (!raw) return null;
+    // Handle SPDX OR expressions — take first
+    if (raw.includes(' OR ')) raw = raw.split(' OR ')[0];
+    if (raw.includes(' AND ')) raw = raw.split(' AND ')[0];
+    raw = raw.replace(/[()]/g, '').trim();
+    return raw;
+  }
+
+  function lookupLicense(raw) {
+    if (!raw) return { category: 'Unknown', risk: 'unknown', label: 'Unknown' };
+    const norm = normalizeLicense(raw);
+    if (LICENSE_DB[norm]) return LICENSE_DB[norm];
+    // Fuzzy match
+    const upper = norm.toUpperCase();
+    if (upper.includes('GPL') && upper.includes('AGPL')) return LICENSE_DB['AGPL-3.0'];
+    if (upper.includes('AGPL')) return LICENSE_DB['AGPL-3.0'];
+    if (upper.includes('GPL') && upper.includes('3')) return LICENSE_DB['GPL-3.0'];
+    if (upper.includes('GPL') && upper.includes('2')) return LICENSE_DB['GPL-2.0'];
+    if (upper.includes('GPL')) return LICENSE_DB['GPL-3.0'];
+    if (upper.includes('LGPL') && upper.includes('3')) return LICENSE_DB['LGPL-3.0'];
+    if (upper.includes('LGPL')) return LICENSE_DB['LGPL-2.1'];
+    if (upper.includes('MIT')) return LICENSE_DB['MIT'];
+    if (upper.includes('BSD')) return LICENSE_DB['BSD-3-Clause'];
+    if (upper.includes('APACHE')) return LICENSE_DB['Apache-2.0'];
+    if (upper.includes('ISC')) return LICENSE_DB['ISC'];
+    if (upper.includes('MPL')) return LICENSE_DB['MPL-2.0'];
+    if (upper.includes('UNLICENSE')) return LICENSE_DB['Unlicense'];
+    if (upper.includes('CC0')) return LICENSE_DB['CC0-1.0'];
+    return { category: 'Unknown', risk: 'unknown', label: norm || 'Unknown' };
+  }
+
+  // Sample package.json data
+  const SAMPLES = {
+    saas: {
+      name: 'my-saas-app',
+      dependencies: {
+        'react': '^18.2.0', 'react-dom': '^18.2.0',
+        'express': '^4.18.2', 'axios': '^1.4.0',
+        'lodash': '^4.17.21', 'moment': '^2.29.4',
+        'dotenv': '^16.0.3', 'cors': '^2.8.5',
+        'jsonwebtoken': '^9.0.0', 'bcryptjs': '^2.4.3'
+      },
+      devDependencies: {
+        'jest': '^29.5.0', 'eslint': '^8.42.0',
+        'prettier': '^2.8.8', 'typescript': '^5.1.3'
+      }
+    },
+    risky: {
+      name: 'risky-project',
+      dependencies: {
+        'react': '^18.2.0', 'express': '^4.18.2',
+        'mysql2': '^3.3.3', 'ffmpeg-static': '^5.1.0',
+      },
+      devDependencies: {
+        'jest': '^29.5.0', 'webpack': '^5.88.0',
+        'node-sass': '^9.0.0'
+      }
+    },
+    clean: {
+      name: 'clean-project',
+      dependencies: {
+        'react': '^18.2.0', 'react-dom': '^18.2.0',
+        'vite': '^4.3.9', 'axios': '^1.4.0',
+        'zod': '^3.21.4', 'date-fns': '^2.30.0',
+        'clsx': '^1.2.1', 'zustand': '^4.3.8'
+      }
+    },
+    mixed: {
+      name: 'mixed-license-app',
+      dependencies: {
+        'react': '^18.2.0', 'express': '^4.18.2',
+        'sequelize': '^6.32.1', 'pg': '^8.11.0',
+        'socket.io': '^4.6.2', 'sharp': '^0.32.1',
+        'pdfkit': '^0.13.0'
+      },
+      devDependencies: {
+        'mocha': '^10.2.0', 'chai': '^4.3.7',
+        'nodemon': '^3.0.1', 'eslint': '^8.42.0'
+      }
+    }
+  };
+
+  // Real npm registry license data (pre-fetched for demo accuracy)
+  const NPM_LICENSE_CACHE = {
+    'react': 'MIT', 'react-dom': 'MIT', 'express': 'MIT',
+    'axios': 'MIT', 'lodash': 'MIT', 'moment': 'MIT',
+    'dotenv': 'BSD-2-Clause', 'cors': 'MIT', 'jsonwebtoken': 'MIT',
+    'bcryptjs': 'MIT', 'jest': 'MIT', 'eslint': 'MIT',
+    'prettier': 'MIT', 'typescript': 'Apache-2.0',
+    'mysql2': 'MIT', 'ffmpeg-static': 'GPL-2.0',
+    'webpack': 'MIT', 'node-sass': 'MIT',
+    'vite': 'MIT', 'zod': 'MIT', 'date-fns': 'MIT',
+    'clsx': 'MIT', 'zustand': 'MIT',
+    'sequelize': 'MIT', 'pg': 'MIT',
+    'socket.io': 'MIT', 'sharp': 'Apache-2.0',
+    'pdfkit': 'MIT', 'mocha': 'MIT', 'chai': 'MIT',
+    'nodemon': 'MIT', 'uuid': 'MIT', 'chalk': 'MIT',
+    'commander': 'MIT', 'yargs': 'MIT', 'inquirer': 'MIT',
+    'minimist': 'MIT', 'glob': 'ISC', 'rimraf': 'ISC',
+    'cross-env': 'MIT', 'concurrently': 'MIT', 'husky': 'MIT',
+    'lint-staged': 'MIT', 'classnames': 'MIT',
+    'tailwindcss': 'MIT', 'postcss': 'MIT', 'autoprefixer': 'MIT',
+    'next': 'MIT', 'nuxt': 'MIT', 'vue': 'MIT',
+    'svelte': 'MIT', '@angular/core': 'MIT',
+    'mongoose': 'MIT', 'redis': 'MIT', 'ioredis': 'MIT',
+    'passport': 'MIT', 'helmet': 'MIT', 'morgan': 'MIT',
+    'body-parser': 'MIT', 'cookie-parser': 'MIT',
+    'multer': 'MIT', 'sharp': 'Apache-2.0',
+    'jimp': 'MIT', 'imagemin': 'MIT',
+    'node-cron': 'ISC', 'cron': 'MIT',
+    'dayjs': 'MIT', 'luxon': 'MIT',
+    'ramda': 'MIT', 'fp-ts': 'MIT',
+    'rxjs': 'Apache-2.0', 'immer': 'MIT',
+    'recoil': 'MIT', 'jotai': 'MIT',
+    '@reduxjs/toolkit': 'MIT', 'redux': 'MIT',
+    'mobx': 'MIT', 'effector': 'MIT',
+    'graphql': 'MIT', 'apollo-server': 'MIT',
+    'prisma': 'Apache-2.0', 'typeorm': 'MIT', 'knex': 'MIT',
+    'jest-environment-node': 'MIT', '@testing-library/react': 'MIT',
+    'cypress': 'MIT', 'playwright': 'Apache-2.0',
+    'storybook': 'MIT', '@storybook/react': 'MIT',
+    'webpack-cli': 'MIT', 'babel-loader': 'MIT',
+    '@babel/core': 'MIT', '@babel/preset-env': 'MIT',
+    'ts-node': 'MIT', 'tsx': 'MIT', 'esbuild': 'MIT',
+    'rollup': 'MIT', 'parcel': 'MIT', 'turbo': 'MIT',
+    'pnpm': 'MIT', 'yarn': 'BSD-2-Clause',
+    'semver': 'ISC', 'debug': 'MIT', 'ms': 'MIT',
+    'path-to-regexp': 'MIT', 'qs': 'BSD-3-Clause',
+    'mime': 'MIT', 'mime-types': 'MIT',
+    'form-data': 'MIT', 'node-fetch': 'MIT',
+    'undici': 'MIT', 'got': 'MIT', 'superagent': 'MIT',
+    'cheerio': 'MIT', 'jsdom': 'MIT',
+    'puppeteer': 'Apache-2.0', 'playwright-core': 'Apache-2.0',
+  };
+
+  function loadSample(key) {
+    document.getElementById('pkg-input').value = JSON.stringify(SAMPLES[key], null, 2);
+  }
+
+  function clearScan() {
+    document.getElementById('pkg-input').value = '';
+    document.getElementById('scan-results').classList.remove('active');
+    document.getElementById('scan-progress').classList.remove('active');
+  }
+
+  async function fetchNpmLicense(pkg) {
+    // Check cache first
+    if (NPM_LICENSE_CACHE[pkg]) return NPM_LICENSE_CACHE[pkg];
+    // Try npm registry
+    try {
+      const res = await fetch(`https://registry.npmjs.org/${encodeURIComponent(pkg)}/latest`, {
+        signal: AbortSignal.timeout(3000)
+      });
+      if (!res.ok) return null;
+      const data = await res.json();
+      return data.license || null;
+    } catch {
+      return null;
+    }
+  }
+
+  async function runScan() {
+    const input = document.getElementById('pkg-input').value.trim();
+    if (!input) {
+      alert('Please paste a package.json first — or load one of the samples.');
+      return;
+    }
+
+    let parsed;
+    try {
+      parsed = JSON.parse(input);
+    } catch {
+      alert('Invalid JSON. Please paste a valid package.json file.');
+      return;
+    }
+
+    const deps = {
+      ...( parsed.dependencies || {} ),
+      ...( parsed.devDependencies || {} ),
+    };
+
+    const pkgNames = Object.keys(deps);
+    if (pkgNames.length === 0) {
+      alert('No dependencies found in this package.json.');
+      return;
+    }
+
+    // UI state — scanning
+    const btn = document.getElementById('scan-btn');
+    btn.disabled = true;
+    document.getElementById('scan-btn-text').textContent = '⚡ Scanning...';
+    document.getElementById('scan-results').classList.remove('active');
+    const progress = document.getElementById('scan-progress');
+    progress.classList.add('active');
+    const fill = document.getElementById('scan-fill');
+    const status = document.getElementById('scan-status');
+
+    const results = [];
+    for (let i = 0; i < pkgNames.length; i++) {
+      const pkg = pkgNames[i];
+      const version = deps[pkg];
+      const pct = Math.round(((i + 1) / pkgNames.length) * 100);
+      fill.style.width = pct + '%';
+      status.textContent = `Scanning ${pkg}... (${i + 1}/${pkgNames.length})`;
+
+      const rawLicense = await fetchNpmLicense(pkg);
+      const licInfo = lookupLicense(rawLicense);
+      results.push({ pkg, version, rawLicense, licInfo });
+
+      // Small delay for UX
+      if (pkgNames.length > 3) await new Promise(r => setTimeout(r, 80));
+    }
+
+    // Done — render results
+    progress.classList.remove('active');
+    btn.disabled = false;
+    document.getElementById('scan-btn-text').textContent = '⚡ Run Compliance Scan';
+
+    renderResults(parsed.name || 'Unnamed Project', results);
+  }
+
+  function renderResults(projectName, results) {
+    document.getElementById('result-project-name').textContent = projectName;
+
+    const counts = { danger: 0, warning: 0, safe: 0, unknown: 0 };
+    results.forEach(r => counts[r.licInfo.risk]++);
+
+    document.getElementById('count-danger').textContent = counts.danger;
+    document.getElementById('count-warn').textContent = counts.warning;
+    document.getElementById('count-safe').textContent = counts.safe;
+    document.getElementById('count-unknown').textContent = counts.unknown;
+
+    // Banners
+    document.getElementById('banner-danger').style.display = counts.danger > 0 ? 'block' : 'none';
+    document.getElementById('banner-warning').style.display = counts.warning > 0 && counts.danger === 0 ? 'block' : 'none';
+    document.getElementById('banner-clean').style.display = counts.danger === 0 && counts.warning === 0 ? 'block' : 'none';
+
+    // Package list
+    const list = document.getElementById('package-list');
+    // Sort: danger first, then warning, then safe, then unknown
+    const order = { danger: 0, warning: 1, safe: 2, unknown: 3 };
+    results.sort((a, b) => order[a.licInfo.risk] - order[b.licInfo.risk]);
+
+    list.innerHTML = results.map(r => `
+      <div class="pkg-row ${r.licInfo.risk}" data-risk="${r.licInfo.risk}">
+        <span class="pkg-name">${escapeHtml(r.pkg)}</span>
+        <span class="pkg-version">${escapeHtml(r.version)}</span>
+        <span class="pkg-license-tag">${escapeHtml(r.licInfo.label)}</span>
+        <span class="pkg-category">${escapeHtml(r.licInfo.category)}</span>
+      </div>
+    `).join('');
+
+    // Store results for PDF
+    window._scanResults = { projectName, results, counts };
+
+    document.getElementById('scan-results').classList.add('active');
+    document.getElementById('scan-results').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function filterPkgs(risk, btn) {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.pkg-row').forEach(row => {
+      if (risk === 'all' || row.dataset.risk === risk) {
+        row.classList.remove('hidden');
+      } else {
+        row.classList.add('hidden');
+      }
+    });
+  }
+
+  function escapeHtml(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
+  // PDF Download using jsPDF
+  function downloadPDF() {
+    const d = window._scanResults;
+    if (!d) return;
+
+    // Load jsPDF dynamically
+    const script = document.createElement('script');
+    script.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
+    script.onload = () => generatePDF(d);
+    document.head.appendChild(script);
+  }
+
+  function generatePDF(d) {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+    const W = 210, margin = 18;
+    let y = margin;
+
+    // Header bar
+    doc.setFillColor(10, 10, 8);
+    doc.rect(0, 0, W, 28, 'F');
+    doc.setTextColor(200, 240, 58);
+    doc.setFontSize(18);
+    doc.setFont('helvetica', 'bold');
+    doc.text('OSS.GUIDE', margin, 13);
+    doc.setFontSize(9);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(180, 180, 150);
+    doc.text('Open Source Compliance Report', margin, 20);
+    doc.text(`Generated: ${new Date().toLocaleDateString('en-US', {year:'numeric',month:'long',day:'numeric'})}`, W - margin, 20, { align: 'right' });
+
+    y = 38;
+
+    // Project name
+    doc.setTextColor(30, 30, 25);
+    doc.setFontSize(16);
+    doc.setFont('helvetica', 'bold');
+    doc.text(d.projectName, margin, y);
+    y += 8;
+
+    // Summary boxes
+    const boxes = [
+      { label: 'HIGH RISK', count: d.counts.danger, color: [240, 58, 90] },
+      { label: 'REVIEW', count: d.counts.warning, color: [240, 200, 58] },
+      { label: 'COMPLIANT', count: d.counts.safe, color: [58, 240, 138] },
+      { label: 'UNKNOWN', count: d.counts.unknown, color: [130, 130, 110] },
+    ];
+    const bw = (W - margin * 2 - 9) / 4;
+    boxes.forEach((b, i) => {
+      const x = margin + i * (bw + 3);
+      doc.setFillColor(...b.color);
+      doc.rect(x, y, bw, 14, 'F');
+      doc.setTextColor(255, 255, 255);
+      doc.setFontSize(18);
+      doc.setFont('helvetica', 'bold');
+      doc.text(String(b.count), x + bw / 2, y + 8, { align: 'center' });
+      doc.setFontSize(6);
+      doc.setFont('helvetica', 'normal');
+      doc.text(b.label, x + bw / 2, y + 12.5, { align: 'center' });
+    });
+    y += 22;
+
+    // Risk notice
+    if (d.counts.danger > 0) {
+      doc.setFillColor(255, 240, 242);
+      doc.rect(margin, y, W - margin * 2, 12, 'F');
+      doc.setTextColor(200, 20, 50);
+      doc.setFontSize(8);
+      doc.setFont('helvetica', 'bold');
+      doc.text('⚠ CRITICAL: GPL/AGPL licenses detected — source disclosure obligations may apply.', margin + 3, y + 5);
+      doc.setFont('helvetica', 'normal');
+      doc.text('Consult your legal team before distributing this software or running it as a SaaS.', margin + 3, y + 10);
+      y += 17;
+    }
+
+    // Table
+    y += 4;
+    doc.setFillColor(22, 22, 20);
+    doc.rect(margin, y, W - margin * 2, 7, 'F');
+    doc.setTextColor(200, 240, 58);
+    doc.setFontSize(7.5);
+    doc.setFont('helvetica', 'bold');
+    doc.text('PACKAGE', margin + 2, y + 4.5);
+    doc.text('VERSION', margin + 72, y + 4.5);
+    doc.text('LICENSE', margin + 100, y + 4.5);
+    doc.text('CATEGORY', margin + 135, y + 4.5);
+    doc.text('RISK', margin + 165, y + 4.5);
+    y += 9;
+
+    const riskOrder = { danger: 0, warning: 1, safe: 2, unknown: 3 };
+    const sorted = [...d.results].sort((a,b) => riskOrder[a.licInfo.risk] - riskOrder[b.licInfo.risk]);
+
+    sorted.forEach((r, idx) => {
+      if (y > 265) {
+        doc.addPage();
+        y = margin;
+      }
+      const rowColor = idx % 2 === 0 ? [250, 250, 248] : [244, 244, 240];
+      doc.setFillColor(...rowColor);
+      doc.rect(margin, y - 1.5, W - margin * 2, 7, 'F');
+
+      // Risk indicator stripe
+      const riskColors = { danger:[240,58,90], warning:[240,200,58], safe:[58,240,138], unknown:[150,150,130] };
+      doc.setFillColor(...riskColors[r.licInfo.risk]);
+      doc.rect(margin, y - 1.5, 2, 7, 'F');
+
+      doc.setTextColor(30, 30, 25);
+      doc.setFontSize(7.5);
+      doc.setFont('helvetica', idx % 2 === 0 ? 'normal' : 'normal');
+      doc.text(r.pkg.substring(0, 30), margin + 4, y + 3.5);
+      doc.text(r.version.replace(/[\^~>=<]/g, '').substring(0, 12), margin + 72, y + 3.5);
+
+      const licColors = { danger:[200,20,50], warning:[180,130,0], safe:[20,150,80], unknown:[100,100,90] };
+      doc.setTextColor(...licColors[r.licInfo.risk]);
+      doc.setFont('helvetica', 'bold');
+      doc.text(r.licInfo.label.substring(0, 18), margin + 100, y + 3.5);
+      doc.setTextColor(80, 80, 70);
+      doc.setFont('helvetica', 'normal');
+      doc.text(r.licInfo.category.substring(0, 18), margin + 135, y + 3.5);
+
+      const riskLabels = { danger:'HIGH RISK', warning:'REVIEW', safe:'OK', unknown:'UNKNOWN' };
+      doc.setTextColor(...licColors[r.licInfo.risk]);
+      doc.setFont('helvetica', 'bold');
+      doc.text(riskLabels[r.licInfo.risk], margin + 165, y + 3.5);
+      y += 7;
+    });
+
+    // Footer
+    y += 8;
+    doc.setDrawColor(200, 240, 58);
+    doc.setLineWidth(0.5);
+    doc.line(margin, y, W - margin, y);
+    y += 6;
+    doc.setTextColor(130, 130, 110);
+    doc.setFontSize(7);
+    doc.setFont('helvetica', 'italic');
+    doc.text('This report is for informational purposes only and does not constitute legal advice.', margin, y);
+    doc.text('Consult a qualified attorney for compliance decisions.', margin, y + 5);
+    doc.text('Generated by OSS.GUIDE — The Free Open Source License Reference', W - margin, y, { align: 'right' });
+
+    doc.save(`oss-compliance-report-${d.projectName.replace(/[^a-z0-9]/gi,'-').toLowerCase()}.pdf`);
+  }
+
+  // Tab switcher
+  function switchTab(tab, btn) {
+    document.querySelectorAll('.scanner-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.scanner-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('panel-' + tab).classList.add('active');
+  }
+
+  // ===================== COMPATIBILITY CHECKER =====================
+
+  // Compatibility matrix: [licA][licB] = { verdict, explanation }
+  const COMPAT = {
+    'MIT': {
+      'MIT': { v:'compatible', e:'Both MIT — fully compatible. No restrictions on combination or distribution.' },
+      'Apache-2.0': { v:'compatible', e:'MIT and Apache 2.0 are compatible. Apache requires attribution and change documentation; MIT requires attribution. Both are permissive.' },
+      'BSD-2-Clause': { v:'compatible', e:'Both permissive licenses. Fully compatible — just preserve copyright notices.' },
+      'BSD-3-Clause': { v:'compatible', e:'Both permissive. Compatible with no restrictions. Preserve copyright notices.' },
+      'ISC': { v:'compatible', e:'ISC and MIT are functionally identical. Fully compatible.' },
+      'GPL-2.0': { v:'compatible', e:'MIT code can be incorporated into GPL v2 projects. The combined work must be distributed under GPL v2.' },
+      'GPL-3.0': { v:'compatible', e:'MIT is compatible with GPL v3. The combined work must be distributed under GPL v3.' },
+      'LGPL-2.1': { v:'compatible', e:'MIT can be used alongside LGPL v2.1 libraries. You can link to LGPL libraries without triggering copyleft for your MIT code.' },
+      'LGPL-3.0': { v:'compatible', e:'MIT code is compatible with LGPL v3. The LGPL library must remain open; your code can stay under MIT.' },
+      'AGPL-3.0': { v:'compatible', e:'MIT code can be combined with AGPL. However, the combined work must be distributed under AGPL — including network use disclosure requirements.' },
+      'MPL-2.0': { v:'compatible', e:'MIT and MPL 2.0 are compatible. MPL applies file-level copyleft — only MPL files must stay open, not your MIT code.' },
+      'EUPL-1.2': { v:'conditional', e:'Conditional compatibility. MIT code can be used in EUPL projects; the combined work may need to be EUPL-licensed upon distribution.' },
+    },
+    'Apache-2.0': {
+      'MIT': { v:'compatible', e:'Apache 2.0 and MIT are compatible. Apache requires documenting changes; both require attribution.' },
+      'Apache-2.0': { v:'compatible', e:'Both Apache 2.0 — fully compatible. Patent grants apply from both parties.' },
+      'BSD-2-Clause': { v:'compatible', e:'Both permissive. Compatible — Apache adds patent protection that BSD lacks.' },
+      'BSD-3-Clause': { v:'compatible', e:'Both permissive. Compatible with no concerns.' },
+      'ISC': { v:'compatible', e:'Both permissive. Fully compatible.' },
+      'GPL-2.0': { v:'incompatible', e:'Apache 2.0 is NOT compatible with GPL v2. The patent retaliation clause in Apache 2.0 is considered an additional restriction under GPL v2 terms.' },
+      'GPL-3.0': { v:'compatible', e:'Apache 2.0 is compatible with GPL v3. GPL v3 explicitly allows combination with Apache 2.0. The combined work is distributed under GPL v3.' },
+      'LGPL-2.1': { v:'incompatible', e:'Apache 2.0 is not compatible with LGPL v2.1 due to the same patent clause issue as GPL v2. Use LGPL v3 instead.' },
+      'LGPL-3.0': { v:'compatible', e:'Apache 2.0 is compatible with LGPL v3. LGPL v3 incorporates GPL v3 which is Apache-compatible.' },
+      'AGPL-3.0': { v:'compatible', e:'Apache 2.0 code can be combined with AGPL v3. The combined work must be distributed under AGPL, including network use requirements.' },
+      'MPL-2.0': { v:'compatible', e:'Apache 2.0 and MPL 2.0 are compatible. File-level copyleft applies to MPL files only.' },
+      'EUPL-1.2': { v:'compatible', e:'EUPL v1.2 explicitly lists Apache 2.0 as a compatible license for combined works.' },
+    },
+    'GPL-3.0': {
+      'MIT': { v:'compatible', e:'GPL v3 can incorporate MIT code. The combined work is distributed under GPL v3.' },
+      'Apache-2.0': { v:'compatible', e:'GPL v3 explicitly permits use with Apache 2.0. Combined work distributed under GPL v3.' },
+      'BSD-2-Clause': { v:'compatible', e:'BSD 2-Clause is compatible with GPL v3. Combined work distributed under GPL v3.' },
+      'BSD-3-Clause': { v:'compatible', e:'BSD 3-Clause is compatible with GPL v3. Combined work distributed under GPL v3.' },
+      'ISC': { v:'compatible', e:'ISC is functionally identical to MIT — compatible with GPL v3.' },
+      'GPL-2.0': { v:'conditional', e:'GPL v2 and GPL v3 are not directly compatible unless the code is "GPL v2 or later." Check the specific license text for an upgrade clause.' },
+      'GPL-3.0': { v:'compatible', e:'Both GPL v3 — fully compatible. Distribute the combined work under GPL v3.' },
+      'LGPL-2.1': { v:'conditional', e:'LGPL v2.1 can be used with GPL v3 only if the LGPL v2.1 code allows upgrading to GPL v3. Check for "or later" language.' },
+      'LGPL-3.0': { v:'compatible', e:'LGPL v3 is built on GPL v3. Fully compatible — distribute under GPL v3.' },
+      'AGPL-3.0': { v:'compatible', e:'GPL v3 and AGPL v3 are compatible in the same project, but the combined work must be under AGPL if any AGPL code is included.' },
+      'MPL-2.0': { v:'compatible', e:'MPL 2.0 is compatible with GPL v3. MPL 2.0 files stay MPL, GPL files stay GPL, combined work can be distributed under GPL v3.' },
+      'EUPL-1.2': { v:'compatible', e:'EUPL v1.2 lists GPL v3 as a compatible license for combined works.' },
+    },
+    'AGPL-3.0': {
+      'MIT': { v:'compatible', e:'MIT code can be incorporated into AGPL projects. The combined work must be distributed under AGPL v3 — including network use requirements.' },
+      'Apache-2.0': { v:'compatible', e:'Apache 2.0 is compatible with AGPL v3. Combined work must be under AGPL v3 including network disclosure requirements.' },
+      'BSD-2-Clause': { v:'compatible', e:'BSD 2-Clause is compatible with AGPL v3. Combined work must be distributed under AGPL v3.' },
+      'BSD-3-Clause': { v:'compatible', e:'BSD 3-Clause is compatible with AGPL v3. Combined work must be distributed under AGPL v3.' },
+      'ISC': { v:'compatible', e:'ISC is compatible with AGPL v3. Combined work must be distributed under AGPL v3.' },
+      'GPL-2.0': { v:'incompatible', e:'AGPL v3 and GPL v2 are not compatible. GPL v2 lacks the "or later" upgrade path required for AGPL v3 combination.' },
+      'GPL-3.0': { v:'compatible', e:'AGPL v3 and GPL v3 are compatible. If both are present, the combined work is distributed under AGPL v3.' },
+      'LGPL-3.0': { v:'compatible', e:'LGPL v3 code can be used in an AGPL v3 project. Combined work distributed under AGPL v3.' },
+      'AGPL-3.0': { v:'compatible', e:'Both AGPL v3 — fully compatible. Network use source disclosure requirements apply.' },
+      'MPL-2.0': { v:'compatible', e:'MPL 2.0 is compatible with AGPL v3. Combined work must be under AGPL v3.' },
+      'EUPL-1.2': { v:'compatible', e:'EUPL v1.2 lists AGPL v3 as a compatible license.' },
+    },
+    'GPL-2.0': {
+      'MIT': { v:'compatible', e:'MIT code can be incorporated into GPL v2 projects. The combined work is distributed under GPL v2.' },
+      'Apache-2.0': { v:'incompatible', e:'Apache 2.0 is NOT compatible with GPL v2. The patent termination clause in Apache 2.0 constitutes an additional restriction under GPL v2.' },
+      'BSD-2-Clause': { v:'compatible', e:'BSD 2-Clause is compatible with GPL v2. Combined work distributed under GPL v2.' },
+      'BSD-3-Clause': { v:'compatible', e:'BSD 3-Clause is compatible with GPL v2. Combined work distributed under GPL v2.' },
+      'ISC': { v:'compatible', e:'ISC is compatible with GPL v2. Combined work distributed under GPL v2.' },
+      'GPL-2.0': { v:'compatible', e:'Both GPL v2 — fully compatible.' },
+      'GPL-3.0': { v:'conditional', e:'GPL v2 and GPL v3 are incompatible unless the code is "GPL v2 or later." Check the specific license text.' },
+      'LGPL-2.1': { v:'compatible', e:'LGPL v2.1 is designed to be used alongside GPL v2. Combined work distributed under GPL v2.' },
+      'LGPL-3.0': { v:'incompatible', e:'LGPL v3 is built on GPL v3, which is not directly compatible with GPL v2.' },
+      'AGPL-3.0': { v:'incompatible', e:'AGPL v3 requires GPL v3 compatibility which GPL v2 lacks. These cannot be combined.' },
+      'MPL-2.0': { v:'compatible', e:'MPL 2.0 is compatible with GPL v2. MPL files stay MPL, combined work under GPL v2.' },
+      'EUPL-1.2': { v:'incompatible', e:'EUPL v1.2 is not listed as compatible with GPL v2 in its compatibility appendix.' },
+    },
+    'LGPL-3.0': {
+      'MIT': { v:'compatible', e:'MIT can be used alongside LGPL v3. Your MIT code is unaffected; the LGPL library must remain open.' },
+      'Apache-2.0': { v:'compatible', e:'Apache 2.0 is compatible with LGPL v3 (which is built on GPL v3). Your Apache code remains under Apache.' },
+      'BSD-2-Clause': { v:'compatible', e:'BSD 2-Clause works with LGPL v3. Permissive code is unaffected by the copyleft.' },
+      'BSD-3-Clause': { v:'compatible', e:'BSD 3-Clause is compatible with LGPL v3.' },
+      'ISC': { v:'compatible', e:'ISC is compatible with LGPL v3.' },
+      'GPL-2.0': { v:'incompatible', e:'LGPL v3 is based on GPL v3, which is not compatible with GPL v2.' },
+      'GPL-3.0': { v:'compatible', e:'LGPL v3 can be used in GPL v3 projects. The combined work is distributed under GPL v3.' },
+      'LGPL-2.1': { v:'conditional', e:'LGPL v2.1 and v3 are not directly interchangeable. Combination depends on whether LGPL v2.1 has an "or later" upgrade clause.' },
+      'LGPL-3.0': { v:'compatible', e:'Both LGPL v3 — fully compatible.' },
+      'AGPL-3.0': { v:'compatible', e:'LGPL v3 code can be used in AGPL v3 projects. Combined work under AGPL v3.' },
+      'MPL-2.0': { v:'compatible', e:'MPL 2.0 is compatible with LGPL v3.' },
+      'EUPL-1.2': { v:'compatible', e:'EUPL v1.2 lists LGPL v3 as a compatible license.' },
+    },
+    'MPL-2.0': {
+      'MIT': { v:'compatible', e:'MIT and MPL 2.0 are compatible. MIT files stay MIT; MPL files stay MPL. File-level copyleft only.' },
+      'Apache-2.0': { v:'compatible', e:'Apache 2.0 and MPL 2.0 are compatible. Each file retains its own license.' },
+      'BSD-2-Clause': { v:'compatible', e:'BSD 2-Clause and MPL 2.0 are compatible. File-level separation applies.' },
+      'BSD-3-Clause': { v:'compatible', e:'BSD 3-Clause and MPL 2.0 are compatible.' },
+      'ISC': { v:'compatible', e:'ISC and MPL 2.0 are compatible.' },
+      'GPL-2.0': { v:'compatible', e:'MPL 2.0 is compatible with GPL v2. MPL files may be distributed under GPL in combined works.' },
+      'GPL-3.0': { v:'compatible', e:'MPL 2.0 is compatible with GPL v3. Combined work can be under GPL v3.' },
+      'LGPL-2.1': { v:'compatible', e:'MPL 2.0 and LGPL v2.1 are compatible.' },
+      'LGPL-3.0': { v:'compatible', e:'MPL 2.0 and LGPL v3 are compatible.' },
+      'AGPL-3.0': { v:'compatible', e:'MPL 2.0 and AGPL v3 are compatible. Combined work under AGPL v3.' },
+      'MPL-2.0': { v:'compatible', e:'Both MPL 2.0 — fully compatible.' },
+      'EUPL-1.2': { v:'compatible', e:'EUPL v1.2 lists MPL 2.0 as a compatible license.' },
+    },
+  };
+
+  function checkCompat() {
+    const a = document.getElementById('lic-a').value;
+    const b = document.getElementById('lic-b').value;
+    const result = document.getElementById('compat-result');
+
+    if (!a || !b) {
+      result.innerHTML = '<div class="compat-icon">🔍</div><div class="compat-verdict select">Select two licenses above</div><div class="compat-explanation">The compatibility result will appear here.</div>';
+      return;
+    }
+
+    if (a === b) {
+      result.innerHTML = `<div class="compat-icon">✅</div><div class="compat-verdict compatible">COMPATIBLE</div><div class="compat-explanation">Same license — fully compatible with itself.</div>`;
+      return;
+    }
+
+    const data = (COMPAT[a] && COMPAT[a][b]) || (COMPAT[b] && COMPAT[b][a]);
+
+    if (!data) {
+      result.innerHTML = `<div class="compat-icon">❓</div><div class="compat-verdict select">UNKNOWN</div><div class="compat-explanation">Compatibility data not available for this combination. Consult a legal expert.</div>`;
+      return;
+    }
+
+    const icons = { compatible:'✅', incompatible:'❌', conditional:'⚠️' };
+    const labels = { compatible:'COMPATIBLE', incompatible:'INCOMPATIBLE', conditional:'CONDITIONAL' };
+
+    result.innerHTML = `
+      <div class="compat-icon">${icons[data.v]}</div>
+      <div class="compat-verdict ${data.v}">${labels[data.v]}</div>
+      <div class="compat-explanation">${data.e}</div>
+    `;
+  }
+
+  // Build compatibility matrix table
+  function buildCompatMatrix() {
+    const licenses = ['MIT','Apache-2.0','GPL-2.0','GPL-3.0','LGPL-3.0','AGPL-3.0','MPL-2.0'];
+    const colors = { compatible:'#3af08a', incompatible:'#f03a5a', conditional:'#f0c83a', unknown:'#6b6b5a' };
+    const symbols = { compatible:'✓', incompatible:'✕', conditional:'~', unknown:'?' };
+
+    const tbody = document.getElementById('compat-matrix');
+    licenses.forEach(a => {
+      let row = `<tr><td style="padding:0.4rem 0.6rem;font-weight:700;color:var(--text);white-space:nowrap;border-bottom:1px solid var(--border)">${a}</td>`;
+      licenses.forEach(b => {
+        if (a === b) {
+          row += `<td style="padding:0.4rem 0.6rem;text-align:center;color:#3af08a;border-bottom:1px solid var(--border)">✓</td>`;
+          return;
+        }
+        const d = (COMPAT[a] && COMPAT[a][b]) || (COMPAT[b] && COMPAT[b][a]);
+        const v = d ? d.v : 'unknown';
+        row += `<td style="padding:0.4rem 0.6rem;text-align:center;color:${colors[v]};font-weight:700;border-bottom:1px solid var(--border)">${symbols[v]}</td>`;
+      });
+      row += '</tr>';
+      tbody.innerHTML += row;
+    });
+  }
+
+  buildCompatMatrix();
+  // ===================== END SCANNER LOGIC =====================
+</script>
+</body>
+</html>
